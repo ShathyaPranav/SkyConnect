@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flight Booking System</title>
+  <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Poppins:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    /* Background Animation */
+    @keyframes slide {
+      0% { background-image: url('https://i.pinimg.com/736x/87/68/c6/8768c634859d3e36cc5a34d6b5c2d87a.jpg'); }
+      33% { background-image: url('https://i.pinimg.com/736x/d8/f5/79/d8f579c57ae24802deea580b1bcef0fe.jpg'); }
+      66% { background-image: url('https://i.pinimg.com/736x/53/34/e8/5334e87001171d88f916cb7c01bb8d2e.jpg'); }
+      100% { background-image: url('https://i.pinimg.com/736x/87/d8/02/87d80227d335a4906251c266bc46bc0a.jpg'); }
+    }
+
+    .bg-animated {
+      height: 400px;
+      background-size: cover;
+      background-position: center;
+      animation: slide 12s infinite;
+    }
+
+    /* Hero Section Font Styling */
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 4rem;
+    }
+
+    .hero-subtitle {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+    }
+
+    /* Packages Section Styling */
+    .package-card {
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+
+    .package-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
+    }
+
+    /* Customer Reviews */
+    .rating {
+      color: #FFD700; /* Gold color for stars */
+    }
+  </style>
+</head>
+<body class="bg-gray-100">
+
+  <!-- Navbar -->
+  <nav class="flex justify-between items-center p-2 bg-gray-800 text-white">
+    <div class="text-xl font-bold">SkyConnect</div>
+    <div>
+      <a href="login.html" class="bg-white text-bold text-blue-900 hover:initial-scale px-4 py-2 rounded">Sign In / Login</a>
+    </div>
+  </nav>
+
+  <!-- Hero Section with Animated Background -->
+  <div class="bg-animated flex items-center justify-center text-white text-center">
+    <div>
+      <h1 class="hero-title"><i><b>SKYCONNECT</b></i></h1>
+      <p class="hero-subtitle mt-4">Connecting hearts, one city at a time</p>
+    </div>
+  </div>
+
+  <!-- Search Card -->
+  <div class="max-w-4xl mx-auto my-8 bg-white p-6 rounded shadow-lg">
+    <h2 class="text-xl font-bold mb-4">Search Flights</h2>
+    <form id="searchForm" class="grid grid-cols-2 gap-4">
+      <input id="fromLocation" type="text" placeholder="From Location" class="border p-2 rounded">
+      <input id="toLocation" type="text" placeholder="To Destination" class="border p-2 rounded">
+      <input id="travelDate" type="date" class="border p-2 rounded">
+      <select id="tripType" class="border p-2 rounded">
+        <option>One Way</option>
+        <option>Round Trip</option>
+      </select>
+      <input id="travelerCount" type="number" placeholder="Number of Travelers" class="border p-2 rounded">
+      <select id="category" class="border p-2 rounded">
+        <option>Student</option>
+        <option>Doctor</option>
+        <option>Regular</option>
+      </select>
+      <button id="searchBtn" type="button" class="bg-blue-600 text-white px-4 py-2 rounded col-span-2">Search Flights</button>
+    </form>
+  </div>
+<!-- Services Offered --> 
+ <div class="max-w-6xl mx-auto my-12"> 
+  <h2 class="text-2xl font-bold mb-4 text-center">Why Choose Us?</h2>
+   <div class="grid grid-cols-3 gap-4"> <div class="bg-blue-100 p-6 rounded shadow-lg text-center"> 
+    <h3 class="font-bold text-lg mb-2">Affordable Prices</h3>
+     <p>Book flights at competitive rates without hidden charges.</p> 
+    </div> <div class="bg-blue-100 p-6 rounded shadow-lg text-center">
+       <h3 class="font-bold text-lg mb-2">Wide Network</h3> 
+       <p>Travel to hundreds of destinations across the globe.</p> 
+      </div> <div class="bg-blue-100 p-6 rounded shadow-lg text-center">
+         <h3 class="font-bold text-lg mb-2">24/7 Support</h3>
+          <p>Our customer service team is available round the clock.</p>
+         </div> </div> </div>
+  <!-- Flight Packages -->
+  <div class="max-w-6xl mx-auto my-12">
+    <h2 class="text-2xl font-bold mb-4 text-center">Exciting Packages</h2>
+    <div class="grid grid-cols-3 gap-4">
+      <div class="package-card bg-white p-4 rounded shadow-lg text-center">
+        <img src="https://i.pinimg.com/474x/a8/b7/24/a8b7242647543f97349cdfb27eb4b96f.jpg" alt="Package 1" class="rounded mb-4">
+        <h3 class="font-bold text-lg">Holiday Getaways</h3>
+        <p>Enjoy a luxurious holiday escape to your dream destination.</p>
+      </div>
+      <div class="package-card bg-white p-4 rounded shadow-lg text-center">
+        <img src="https://i.pinimg.com/474x/6c/10/1d/6c101dd43b422ab3716af9e6f562f8b6.jpg" alt="Package 2" class="rounded mb-4">
+        <h3 class="font-bold text-lg">Family Discounts</h3>
+        <p>Exclusive deals for family vacations at affordable prices.</p>
+      </div>
+      <div class="package-card bg-white p-4 rounded shadow-lg text-center">
+        <img src="https://i.pinimg.com/474x/2e/c6/90/2ec6907fe8ab79705a81c5c5f155989f.jpg" alt="Package 3" class="rounded mb-4">
+        <h3 class="font-bold text-lg">Weekend Escapes</h3>
+        <p>Perfect short trips to rejuvenate over the weekend.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Customer Reviews Section -->
+  <div class="max-w-6xl mx-auto my-8">
+    <h2 class="text-xl font-bold mb-4">Customer Reviews</h2>
+    <div class="grid grid-cols-3 gap-4">
+      <div class="bg-white p-4 rounded shadow-lg">
+        "Amazing experience! Everything was seamless and easy!"
+        <div class="rating mt-2">★★★★★</div>
+        <p class="text-sm mt-1">- John Doe</p>
+      </div>
+      <div class="bg-white p-4 rounded shadow-lg">
+        "Great service and even better discounts!"
+        <div class="rating mt-2">★★★★☆</div>
+        <p class="text-sm mt-1">- Jane Smith</p>
+      </div>
+      <div class="bg-white p-4 rounded shadow-lg">
+        "Highly recommend SKYCONNECT for all your travels!"
+        <div class="rating mt-2">★★★★★</div>
+        <p class="text-sm mt-1">- Alice Brown</p>
+      </div>
+    </div>
+  </div>
+<!-- FAQ Section --> <div class="max-w-6xl mx-auto my-8"> 
+  <h2 class="text-xl font-bold mb-4">Frequently Asked Questions</h2> 
+  <details class="mb-4"> <summary class="font-bold">How can I book a flight?</summary> 
+    <p>You can use our search tool to find and book flights in just a few clicks!</p> 
+  </details> <details class="mb-4"> <summary class="font-bold">Are there discounts for specific categories?</summary>
+     <p>Yes, students, doctors, and frequent travelers can enjoy special discounts.</p> </details>
+      <details class="mb-4"> <summary class="font-bold">Can I modify my booking?</summary>
+         <p>Yes, you can easily modify your bookings from the "Manage Bookings" page.</p> 
+        </details> </div>
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white p-4 text-center mt-10">
+    <p>Follow us on <a href="#" class="text-blue-400">Instagram</a> | <a href="#" class="text-blue-400">Facebook</a></p>
+  </footer>
+
+  <script>
+    const searchBtn = document.getElementById("searchBtn");
+
+    // Redirect to login page when search button is clicked
+    searchBtn.addEventListener("click", () => {
+      window.location.href = "login.html";
+    });
+  </script>
+</body>
+</html>

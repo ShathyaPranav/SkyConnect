@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Passenger Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f9fafb;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="bg-gray-800 text-white p-4">
+    <div class="flex justify-between items-center max-w-6xl mx-auto">
+      <div class="text-xl font-bold">SkyConnect</div>
+      <div class="space-x-4">
+        <a href="dashboard.html" class="hover:underline">Dashboard</a>
+        <a href="flights.html" class="hover:underline">Flights</a>
+        <a href="manage_bookings.html" class="hover:underline">Manage Bookings</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <div class="max-w-6xl mx-auto mt-8">
+    <!-- Profile Details -->
+    <section class="bg-white p-6 rounded shadow-lg mb-8 flex gap-6 items-center">
+      <img src="https://via.placeholder.com/100" alt="Profile Picture" class="rounded-full w-24 h-24 border">
+      <div>
+        <h2 class="text-2xl font-bold mb-2">Profile Details</h2>
+        <p><strong>Name:</strong> <span id="profileName">John Doe</span></p>
+        <p><strong>Email:</strong> <span id="profileEmail">johndoe@example.com</span></p>
+        <p><strong>Phone:</strong> <span id="profilePhone">+1 234 567 890</span></p>
+      </div>
+    </section>
+
+    <!-- Upcoming Flights -->
+    <section class="bg-white p-6 rounded shadow-lg mb-8">
+      <div class="flex items-center gap-4 mb-4">
+        <img src="https://cdn-icons-png.flaticon.com/512/1071/1071564.png" class="w-8 h-8" />
+        <h2 class="text-2xl font-bold">Upcoming Flights</h2>
+      </div>
+      <table class="w-full border-collapse border border-gray-300">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="border p-2">Flight</th>
+            <th class="border p-2">Date</th>
+            <th class="border p-2">From</th>
+            <th class="border p-2">To</th>
+            <th class="border p-2">Status</th>
+          </tr>
+        </thead>
+        <tbody id="upcomingFlightsTable">
+          <!-- Upcoming flights will be dynamically inserted here -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Booking History -->
+    <section class="bg-white p-6 rounded shadow-lg mb-8">
+      <div class="flex items-center gap-4 mb-4">
+        <img src="https://cdn-icons-png.flaticon.com/512/102/102649.png" class="w-8 h-8" />
+        <h2 class="text-2xl font-bold">Booking History</h2>
+      </div>
+      <table class="w-full border-collapse border border-gray-300" id="bookingHistoryTable">
+        <thead>
+          <tr class="bg-gray-200">
+            <th class="border p-2">Flight</th>
+            <th class="border p-2">Date</th>
+            <th class="border p-2">From</th>
+            <th class="border p-2">To</th>
+            <th class="border p-2">Status</th>
+          </tr>
+        </thead>
+        <tbody id="bookingHistory">
+          <!-- Booking history will be dynamically inserted here -->
+        </tbody>
+      </table>
+    </section>
+
+    <!-- Frequent Flyer Discount -->
+    <section class="bg-white p-6 rounded shadow-lg mb-8" id="discountSection" style="display:none;">
+      <div class="flex items-center gap-4 mb-4">
+        <img src="https://cdn-icons-png.flaticon.com/512/929/929440.png" class="w-8 h-8" />
+        <h2 class="text-2xl font-bold text-green-700">Frequent Flyer Reward</h2>
+      </div>
+      <p class="text-lg text-gray-700">🎉 Congratulations! You're eligible for a <strong>15% discount</strong> on your next booking as a valued frequent flyer.</p>
+    </section>
+
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white p-4 text-center mt-8">
+    <p>&copy; 2025 SkyConnect. All rights reserved.</p>
+  </footer>
+
+  <script>
+    async function fetchUserData() {
+      try {
+        const token = localStorage.getItem('token');
+        if (!token) return alert("Please login first!");
+
+        const response = await fetch('http://localhost:5501/get-user-info', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          }
+        });
+
+        if (response.ok) {
+          const userData = await response.json();
+          document.getElementById('profileName').textContent = userData.NAME || localStorage.getItem('username');
+          document.getElementById('profileEmail').textContent = userData.EMAIL || localStorage.getItem('email');
+          document.getElementById('profilePhone').textContent = userData.PHONE || "N/A";  // Display phone number
+        } else {
+          console.error("Failed to fetch user data");
+        }
+      } catch (err) {
+        console.error("Error fetching user data", err);
+      }
+    }
+
+    async function fetchUpcomingFlights() {
+  try {
+    const token = localStorage.getItem('token');
+    console.log("Token from localStorage:", token);
+
+    if (!token) return alert("Please login first!");
+
+    const response = await fetch('http://localhost:5501/upcoming-flights', {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+    }
+});
+
+    if (response.ok) {
+      const flightData = await response.json();
+      console.log("Upcoming flights:", flightData);
+      const tableBody = document.getElementById('upcomingFlightsTable');
+      tableBody.innerHTML = '';
+
+      flightData.forEach(flight => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td class="border p-2">${flight.FLIGHT_ID}</td>
+          <td class="border p-2">${flight.FLIGHT_DATE}</td>
+          <td class="border p-2">${flight.DEPARTURE_LOCATION}</td>
+          <td class="border p-2">${flight.ARRIVAL_LOCATION}</td>
+          <td class="border p-2 text-blue-600">${flight.BOOKING_STATUS || 'Scheduled'}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+
+      // Show discount section if more than 3 upcoming flights
+      if (flightData.length >= 3) {
+        document.getElementById('discountSection').style.display = 'block';
+      }
+    } else {
+      console.error("Failed to fetch flights");
+    }
+  } catch (err) {
+    console.error("Error fetching flights", err);
+  }
+}
+
+
+    async function fetchBookingHistory() {
+  try {
+    const token = localStorage.getItem('token');
+    if (!token) return alert("Please login first!");
+
+    const response = await fetch('http://localhost:5501/booking-history', {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`
+      }
+    });
+
+    if (response.ok) {
+      const bookingData = await response.json();
+      console.log("Booking data:", bookingData);
+      const table = document.getElementById('bookingHistory');
+      table.innerHTML = ''; // Clear existing content
+
+      bookingData.forEach(booking => {
+  const row = document.createElement('tr');
+  row.innerHTML = `
+    <td class="border p-2">${booking.FLIGHT_ID}</td>
+    <td class="border p-2">${booking.FLIGHT_DATE}</td>
+    <td class="border p-2">${booking.DEPARTURE_LOCATION}</td>
+    <td class="border p-2">${booking.ARRIVAL_LOCATION}</td>
+    <td class="border p-2 ${booking.BOOKING_STATUS === 'Completed' ? 'text-green-600' : 'text-red-600'}">${booking.BOOKING_STATUS}</td>
+  `;
+  table.appendChild(row);
+});
+    } else {
+      console.error("Failed to fetch booking history");
+    }
+  } catch (err) {
+    console.error("Error fetching booking history", err);
+  }
+}
+
+    window.onload = function () {
+        fetchUserData();
+        fetchUpcomingFlights();
+        fetchBookingHistory();
+    };
+  </script>
+</body>
+</html>

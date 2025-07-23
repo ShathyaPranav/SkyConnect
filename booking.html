@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Booking Page</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #f9fafb; /* Light gray background */
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="bg-gray-800 text-white p-4">
+    <div class="flex justify-between items-center max-w-6xl mx-auto">
+      <div class="text-xl font-bold">SkyConnect</div>
+      <div class="space-x-4">
+        <a href="dashboard.html" class="hover:underline">Dashboard</a>
+        <a href="flights.html" class="hover:underline">Flights</a>
+        <a href="manage_bookings.html" class="hover:underline">Manage Bookings</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Booking Information -->
+  <div class="max-w-6xl mx-auto my-8 bg-white p-6 rounded shadow-lg">
+    <h2 class="text-2xl font-bold mb-4">Booking Details</h2>
+    <div id="bookingDetails" class="space-y-4">
+      <!-- Dynamic Booking Details -->
+      <p><strong>Booking ID:</strong> <span id="bookingID">Generating...</span></p>
+      <p><strong>Flight ID:</strong> <span id="flightID">N/A</span></p>
+      <p><strong>From:</strong> <span id="fromPlace">N/A</span></p>
+      <p><strong>To:</strong> <span id="toPlace">N/A</span></p>
+      <p><strong>Date of Travel:</strong> <span id="dateOfTravel">N/A</span></p>
+      <p><strong>Base Fare:</strong> <span id="baseFare">N/A</span></p>
+    </div>
+
+    <!-- Proceed to Transaction -->
+    <div class="mt-6">
+      <button id="transactionBtn" class="bg-blue-600 text-white px-4 py-2 rounded">Proceed to Transaction</button>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="bg-gray-800 text-white p-4 text-center mt-8">
+    <p>&copy; 2025 SkyConnect. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Retrieve flight details from query parameters (passed from Flights Page)
+    const urlParams = new URLSearchParams(window.location.search);
+    const flightID = urlParams.get('flightID') || 'Unknown Flight ID';
+    const fromPlace = urlParams.get('from') || 'Unknown Departure';
+    const toPlace = urlParams.get('to') || 'Unknown Destination';
+    const dateOfTravel = urlParams.get('date') || 'N/A';
+    const baseFare = urlParams.get('baseFare') || 'N/A';
+    
+    // Display flight details on the page
+    document.getElementById('flightID').textContent = flightID;
+    document.getElementById('fromPlace').textContent = fromPlace;
+    document.getElementById('toPlace').textContent = toPlace;
+    document.getElementById('dateOfTravel').textContent = dateOfTravel;
+    document.getElementById('baseFare').textContent = `₹${baseFare}`;
+    
+    // Generate booking ID (8-digit random) and seat number (e.g., A12)
+    const bookingID = Math.floor(10000000 + Math.random() * 90000000);
+    const seatNumber = String.fromCharCode(65 + Math.floor(Math.random() * 6)) + Math.floor(Math.random() * 30 + 1);
+    
+    // Show booking ID on the page
+    document.getElementById('bookingID').textContent = bookingID;
+  
+    // Get token and extract passengerID
+    const token = localStorage.getItem("token");
+    let passengerID = null;
+    
+    if (token) {
+      const payload = JSON.parse(atob(token.split('.')[1]));
+      passengerID = payload.PASSENGER_ID;  // Ensure PASSENGER_ID is part of your JWT payload
+    }
+  
+    // Handle "Proceed to Transaction" button click
+    document.getElementById('transactionBtn').addEventListener('click', () => {
+      if (!token || !passengerID) {
+        alert("Please login before booking.");
+        return;
+      }
+      
+      const bookingData = {
+  booking_id: bookingID,
+  passenger_id: passengerID,
+  flight_id: flightID,
+  seat_number: seatNumber,
+  status: "Confirmed" // ✅ Fix: Proper casing to match DB constraint
+};
+    
+      // Post the booking data to the backend
+      fetch("http://localhost:5501/book-flight", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`  // Attach token in Authorization header
+        },
+        body: JSON.stringify(bookingData)
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          console.log("Booking successful:", data);
+          const queryParams = new URLSearchParams({
+            booking_id: bookingID,
+            flightID,
+            baseFare
+          }).toString();
+          window.location.href = `transaction.html?${queryParams}`;  // Redirect to transaction page
+        } else {
+          alert("Booking failed: " + (data.error || "Unknown error"));
+        }
+      })
+      .catch(err => {
+        console.error("Booking failed:", err);
+        alert("Booking failed. Try again.");
+      });
+    });
+  </script>
+</body>
+</html>
