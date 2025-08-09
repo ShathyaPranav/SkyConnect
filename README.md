@@ -10,8 +10,6 @@ SkyConnect is a web-based flight booking system that allows users to search for 
 - **Manage Bookings:** View, update, or cancel existing bookings.
 - **Transaction History:** View past transactions and booking history.
 - **Passenger Dashboard:** See profile, upcoming flights, and booking history.
-- **Employee Dashboard:** View assigned flights, attendance, and profile.
-- **Admin Views:** Manage airlines, employees, and view reports (static pages).
 - **Responsive UI:** Built with Tailwind CSS for a modern look.
 
 ## Screenshots
